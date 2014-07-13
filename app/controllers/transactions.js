@@ -69,6 +69,7 @@ exports.list = function(req, res, next) {
   var bId = req.query.block;
   var addrStr = req.query.address;
   var page = req.query.pageNum;
+  var txIds = req.query.ids;
   var pageLength = 10;
   var pagesTotal = 1;
   var txLength;
@@ -140,6 +141,27 @@ exports.list = function(req, res, next) {
           pagesTotal: pagesTotal,
           txs: results
         });
+      });
+    });
+  }
+  else if (txIds) {
+    if (page) {
+      var spliceInit = page * pageLength;
+      txs = txIds.splice(spliceInit, pageLength);
+        pageTotal = Math.ceil(txLength / pageLength);
+    }
+    else {
+      txs = txIds
+    }
+
+    async.mapSeries(txs, getTransaction, function(err, results) {
+      if (err) {
+        console.log (err);
+        res.status(404).send('TX not found');
+      }
+      res.jsonp({
+        pageTotal: pageTotal,
+        txs: results
       });
     });
   }
