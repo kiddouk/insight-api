@@ -145,10 +145,13 @@ exports.list = function(req, res, next) {
     });
   }
   else if (txIds) {
+
+    txLength = txIds.length;
+
     if (page) {
       var spliceInit = page * pageLength;
       txs = txIds.splice(spliceInit, pageLength);
-        pageTotal = Math.ceil(txLength / pageLength);
+        pagesTotal = Math.ceil(txLength / pageLength);
     }
     else {
       txs = txIds
@@ -160,7 +163,7 @@ exports.list = function(req, res, next) {
         res.status(404).send('TX not found');
       }
       res.jsonp({
-        pageTotal: pageTotal,
+        pagesTotal: pagesTotal,
         txs: results
       });
     });
