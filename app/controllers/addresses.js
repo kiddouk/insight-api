@@ -28,7 +28,11 @@ var getAddrs = function(req, res, next) {
   try {
     var addrStrs = req.param('addrs');
     var s = addrStrs.split(',');
-    if (s.length === 0) return as;
+    if (s.length === 0) {
+        addrStrs = req.param('ids');
+        s = addrStrs.split(',');
+        if (s.length === 0) return as;
+    }
     for (var i = 0; i < s.length; i++) {
       var a = new Address(s[i]);
       as.push(a);
