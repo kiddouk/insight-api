@@ -62,6 +62,21 @@ exports.show = function(req, res, next) {
 };
 
 
+exports.multi = function(req, res, next) {
+    var as = getAddrs(req, res, next);
+
+    async.each(as, function(a, callback) {
+      a.update(function(err) {
+        if (err) callback(err);
+        callback();
+      }, {txLimit: req.query.noTxList?0:-1, ignoreCache: req.param('noCache')});
+    }, function(err) { // finished callback
+      if (err) return common.handleErrors(err, res);
+      res.jsonp(as);
+    });
+
+
+}
 
 exports.utxo = function(req, res, next) {
   var a = getAddr(req, res, next);
