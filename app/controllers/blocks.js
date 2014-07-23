@@ -21,6 +21,8 @@ exports.block = function(req, res, next, hash) {
     else {
       tdb.getPoolInfo(block.info.tx[0], function(info) {
         block.info.poolInfo = info;
+        delete block.info['tx']
+        block.info.links = {'transactions': '/api/block/' + block.info.hash + '/txs?pageNum=1'},
         req.block = block.info;
         return next();
       });
@@ -144,7 +146,7 @@ exports.list = function(req, res) {
               hash: b.hash,
               time: b.ts || info.time,
               txlength: info.tx.length,
-              transactions: info.tx,
+              links: {transactions: '/api/block/' + b.hash + '/txs?pageNum=1'},
               poolInfo: info.poolInfo
             });
           });
