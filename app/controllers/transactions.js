@@ -66,7 +66,7 @@ var getTransaction = function(txid, cb) {
  * List of transaction
  */
 exports.list = function(req, res, next) {
-  var bId = req.query.block;
+  var bId = req.param('block');
   var addrStr = req.query.address;
   var page = req.query.pageNum;
   var txIds = req.query.ids;
