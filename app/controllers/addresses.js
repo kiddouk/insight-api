@@ -27,11 +27,15 @@ var getAddrs = function(req, res, next) {
   var as = [];
   try {
     var addrStrs = req.param('addrs');
-    var s = addrStrs.split(',');
-    if (s.length === 0) {
-        addrStrs = req.param('ids');
-        s = addrStrs.split(',');
-        if (s.length === 0) return as;
+    var s = [];
+    if (addrStrs == null) {
+        s = req.query.ids;
+        if (s.length === 0) {
+         return as;
+        }
+        
+    } else {
+      s = addrStrs.split(',');
     }
     for (var i = 0; i < s.length; i++) {
       var a = new Address(s[i]);
@@ -72,7 +76,7 @@ exports.multi = function(req, res, next) {
       }, {txLimit: req.query.noTxList?0:-1, ignoreCache: req.param('noCache')});
     }, function(err) { // finished callback
       if (err) return common.handleErrors(err, res);
-      res.jsonp(as);
+      res.jsonp({'addresses': as});
     });
 
 
